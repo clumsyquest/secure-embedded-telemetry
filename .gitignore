@@ -1,0 +1,27 @@
+# Build artifacts
+build/
+*.o
+*.elf
+*.bin
+*.hex
+
+# ESP32 / PlatformIO / Arduino
+.pio/
+.pioenvs/
+*.uf2
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Secrets — never commit keys or credentials
+*.key
+*.pem
+secrets.*
+.env
+
+# OS junk
+.DS_Store
+Thumbs.db
+*:Zone.Identifier
