@@ -20,12 +20,16 @@ The Pi runs with no monitor. It joins a Wi-Fi network on its own at boot, gets a
 3. Wait ~1–2 min for the first boot (filesystem resize + Wi-Fi join).
 4. Find the Pi's IP and connect:
    ```
-   ssh clumsyquest@<pi-ip>
+   ssh clumsyquest@172.20.10.10
    ```
 5. Verify:
    ```
-   whoami        # clumsyquest
-   uname -a      # Linux tth ... aarch64  → 64-bit ARM
+   clumsyquest@tth:~ $ whoami
+   clumsyquest
+   clumsyquest@tth:~ $ uname
+   Linux
+   clumsyquest@tth:~ $ uname -a
+   Linux tth 6.18.50+rpt-rpi-v8 #1 SMP PREEMPT Debian 1:6.18.50-1+rpt1 (2026-09-11) aarch64 GNU/Linux
    ```
 
 ## Hurdles I hit (and how I solved them) — the real part
