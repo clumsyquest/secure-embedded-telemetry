@@ -4,7 +4,7 @@ A bare-metal sensor node that sends **encrypted, authenticated** telemetry to a 
 
 Built in public as I learn embedded Linux and embedded security — from bare-metal microcontrollers to the Linux kernel. Real bugs, real fixes, nothing hidden.
 
-> **Status:** 🚧 Work in progress · **Milestone 0 complete** (headless gateway online).
+> Status: 🚧 Work in progress · Milestone 1 complete (telemetry link online).
 
 ---
 
@@ -64,9 +64,11 @@ Full milestone details: [`docs/`](docs/).
 .
 ├── README.md
 ├── docs/
-│   └── 00-headless-pi-setup.md   # Milestone 0 — what I did and the hurdles I solved
-├── node/                         # sensor-node firmware (ESP32) — coming in M1
-├── gateway/                      # gateway service (Pi) — coming in M1
+│   ├── 00-headless-pi-setup.md   # Milestone 0 — headless gateway
+│   ├── 01-telemetry-link.md      # Milestone 1 — telemetry link + hurdles
+│   └── images/                   # proof screenshots
+├── node/                         # sensor-node firmware (ESP32)
+├── gateway/                      # gateway service (Pi)
 └── .gitignore
 ```
 
@@ -74,7 +76,7 @@ Full milestone details: [`docs/`](docs/).
 
 ## Progress log
 
-- **M0 — done.** Raspberry Pi Zero 2 W set up as a headless gateway: Raspberry Pi OS flashed, Wi-Fi + SSH **public-key** auth configured at flash time, reachable over the network with no screen or keyboard. Notes and troubleshooting in [`docs/00-headless-pi-setup.md`](docs/00-headless-pi-setup.md).
+- M1 — done. ESP32-S3 reads an MPU-6050 (accel/gyro/temp) over I2C and streams it as JSON over Wi-Fi/UDP to the Pi gateway, which receives and logs it. Plaintext for now. Modular firmware (wifi / udp / sensor), matching UDP server in plain C on the Pi. Notes and hurdles in docs/01-telemetry-link.md.
 
 ---
 
