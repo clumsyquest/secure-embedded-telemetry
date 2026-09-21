@@ -25,3 +25,7 @@ secrets.*
 .DS_Store
 Thumbs.db
 *:Zone.Identifier
+
+# ESP-IDF managed components (re-fetched on build)
+managed_components/
+sdkconfig.old
