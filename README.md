@@ -39,7 +39,7 @@ It is both a learning project and a portfolio piece for embedded / real-time / s
 | # | Milestone | Status |
 |---|---|---|
 | 0 | **Headless Linux gateway online** (flash, Wi-Fi, SSH key auth) | ✅ Done |
-| 1 | Telemetry link — ESP32 → Wi-Fi/UDP → Pi (plaintext first) | ⬜ Next |
+| 1 | Telemetry link — ESP32 → Wi-Fi/UDP → Pi (plaintext first) | ✅ Done |
 | 2 | Security layer — AES payload + anti-replay counter + threat model | ⬜ |
 | 3 | Gateway as a real service — systemd, logging, small dashboard | ⬜ |
 | 4 | Hardening — read-only rootfs, firewall, key-only SSH, write-up | ⬜ |
