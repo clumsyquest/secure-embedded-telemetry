@@ -11,9 +11,14 @@
 
 #include "wifi_connect.h"
 #include "udp_client.h"
+#include "encrypt.h"
+#include "self_test.h"
 
 void app_main(void)
 {
+   uint8_t msg[]= "message de test";
+   test(msg,strlen((char*)msg));
+
    esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND){
       ESP_ERROR_CHECK(nvs_flash_erase());

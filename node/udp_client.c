@@ -12,6 +12,7 @@
 
 #include "udp_client.h"
 #include "mpu_sensor.h"
+#include "encrypt.h"
 
 #include "lwip/err.h"
 #include "lwip/sockets.h"
@@ -25,8 +26,11 @@
 #define PORT CONFIG_EXAMPLE_PORT
 
 static const char *TAG = "UDP Protocol";
-static char payload[200];
-
+static uint8_t payload[256];
+static uint8_t buffer[284];
+static uint8_t tag[16];
+static uint8_t ciphertext[256];
+static uint8_t nonce[12];
 
 static void udp_client_task(void *pvParameters)
 {
@@ -36,6 +40,8 @@ static void udp_client_task(void *pvParameters)
     mpu6050_gyro_value_t gyro;
     mpu6050_temp_value_t temp;
     mpu6050_handle_t sensor= mpu6050_init();
+
+    encrypt_init();
 
     while (1) {
 
@@ -67,7 +73,7 @@ static void udp_client_task(void *pvParameters)
 
             mpu6050_read(sensor, &acce, &gyro, &temp);
 
-            len= snprintf(payload, sizeof(payload),
+            len= snprintf((char *)payload, sizeof(payload),
                      "{\"acce_x\":%.2f,\"acce_y\":%.2f,\"acce_z\":%.2f,"
                      "\"gyro_x\":%.2f,\"gyro_y\":%.2f,\"gyro_z\":%.2f,"
                      "\"temp\":%.2f}",
@@ -79,7 +85,16 @@ static void udp_client_task(void *pvParameters)
                 ESP_LOGW(TAG, "payload troncated ! need %d octets", len);
             }
 
-            int err = sendto(sock, payload, strlen(payload), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
+
+	    gcm_encrypt(payload, len, ciphertext, tag, nonce);
+
+	    memcpy(buffer,nonce,sizeof(nonce));
+	    memcpy(buffer + sizeof(nonce),ciphertext,len);
+	    memcpy(buffer + len + sizeof(nonce),tag,sizeof(tag));
+
+           int buffer_len= sizeof(nonce) + sizeof(tag) + len;
+
+            int err = sendto(sock, buffer, buffer_len, 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
             if (err < 0) {
                 ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
                 break;
