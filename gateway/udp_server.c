@@ -9,6 +9,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
+#include "mbedtls/gcm.h"
 
 #define PORT 3333
 
@@ -16,8 +17,18 @@ static const char *TAG = "udp_server";
 
 static void udp_server_task(void)
 {
-    char rx_buffer[128];
+    char rx_buffer[256];
     char addr_str[128];
+    int cipher_len=0;
+    uint8_t decrypted[256];
+    uint8_t *nonce;
+    uint8_t *tag;
+    uint8_t *ciphertext;
+
+    static uint8_t key[32] = {0};          // mêmes 32 zéros que l'ESP
+    mbedtls_gcm_context ctx;
+    mbedtls_gcm_init(&ctx);
+    mbedtls_gcm_setkey(&ctx, MBEDTLS_CIPHER_ID_AES, key, 256);
 
     while (1) {
 
@@ -54,18 +65,27 @@ static void udp_server_task(void)
             printf("%s: Waiting for data\n", TAG);
             int len = recvfrom(sock, rx_buffer, sizeof(rx_buffer) - 1, 0, (struct sockaddr *)&source_addr, &socklen);
             // Error occurred during receiving
-            if (len < 0) {
-                printf("%s: recvfrom failed: errno %d\n",TAG, errno);
-                break;
+            if (len < 28) {
+                printf("%s: recvfrom failed: len %d\n",TAG, len);
+                continue;
             }
             // Data received
             else {
                 // Get the sender's ip address as string
                 strcpy(addr_str, inet_ntoa(((struct sockaddr_in *)&source_addr)->sin_addr));
 
-                rx_buffer[len] = 0; // Null-terminate whatever we received and treat like a string...
+		cipher_len= len - 12 - 16;
+		nonce= (uint8_t *)rx_buffer;
+		ciphertext= (uint8_t *)rx_buffer + 12;
+		tag=  (uint8_t *)rx_buffer + 12 + cipher_len;
+
+		int ret= mbedtls_gcm_auth_decrypt(&ctx,cipher_len,nonce,12,NULL,0,tag,16,ciphertext,decrypted);
+                if (ret==0){
+		decrypted[cipher_len] = 0; // Null-terminate whatever we received and treat like a string...
                 printf("%s: Received %d bytes from %s:\n",TAG, len, addr_str);
-                printf("%s: %s\n",TAG, rx_buffer);
+                printf("%s: %s\n",TAG, decrypted);}
+
+		else printf("%s: paquet rejeté (tag invalide)\n", TAG);
 
                 }
             }
