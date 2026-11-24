@@ -13,6 +13,9 @@
 #include "udp_client.h"
 #include "encrypt.h"
 #include "self_test.h"
+#include "atecc_key.h"
+
+#define TAG "telemetry"
 
 void app_main(void)
 {
@@ -30,5 +33,8 @@ void app_main(void)
     ESP_ERROR_CHECK(esp_event_loop_create_default());
 
     wifi_connect_sta();
+    ESP_LOGI(TAG,"atecc start");
+    atecc_key();
+    ESP_LOGI(TAG,"atecc end");
     udp_client_start();
 }

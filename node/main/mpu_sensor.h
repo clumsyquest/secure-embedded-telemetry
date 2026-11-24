@@ -1,8 +1,8 @@
 #include "driver/i2c.h"
 #include "mpu6050.h"
 
-#ifndef MPU6050_H
-#define MPU6050_H
+#ifndef MPU6050_SENSOR_H
+#define MPU6050_SENSOR_H
 
 
 #define I2C_MASTER_SCL_IO 36

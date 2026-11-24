@@ -1,3 +1,6 @@
-idf_component_register(SRCS "telemetry.c" "wifi_connect.c" "udp_client.c" "mpu_sensor.c" "encrypt.c" "self_test.c"
-                       PRIV_REQUIRES spi_flash esp_wifi nvs_flash mbedtls
-                       INCLUDE_DIRS "")
+# The following five lines of boilerplate have to be in your project's
+# CMakeLists in this exact order for cmake to work correctly
+cmake_minimum_required(VERSION 3.28)
+
+include($ENV{IDF_PATH}/tools/cmake/project.cmake)
+project(telemetry)

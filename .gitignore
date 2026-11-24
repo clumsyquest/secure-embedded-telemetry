@@ -29,3 +29,9 @@ Thumbs.db
 # ESP-IDF managed components (re-fetched on build)
 managed_components/
 sdkconfig.old
+
+# ESP-IDF local config (contains WiFi credentials)
+sdkconfig
+
+# Editor
+.vscode/
